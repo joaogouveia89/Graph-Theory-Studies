@@ -4,6 +4,7 @@
 #include <functional>
 #include<memory>
 #include<algorithm>
+#include<math.h>
 
 #include "Node.h"
 
@@ -22,5 +23,7 @@ public:
 
     std::vector<wxPoint> GetNodesPoints();
 
-    void CreateNode(wxPoint nodePoint);
+    int NodeRadius() const { return 10; }
+
+    bool CreateNode(wxPoint nodePoint);
 };

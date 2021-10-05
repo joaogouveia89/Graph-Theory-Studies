@@ -47,9 +47,10 @@ void GraphTheoryPanel::paintNow()
 void GraphTheoryPanel::render(wxDC &dc)
 {
     auto points = graph->GetNodesPoints();
+    int nodeRadius = graph->NodeRadius();
 
     for(auto p : points){
-        dc.DrawCircle( p, 10 /* radius */ );
+        dc.DrawCircle( p, nodeRadius );
     }
 }
 
