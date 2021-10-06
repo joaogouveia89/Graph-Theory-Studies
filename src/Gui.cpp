@@ -72,7 +72,7 @@ void GraphTheoryPanel::paintNow()
 
 void GraphTheoryPanel::render(wxDC &dc)
 {
-    auto points = graph->GetNodesPoints();
+    auto points = graph->GetNodes();
     int nodeRadius = graph->NodeRadius();
     wxColour colour(0, 0, 255);
 
@@ -80,13 +80,15 @@ void GraphTheoryPanel::render(wxDC &dc)
     dc.SetBrush(*wxBLUE_BRUSH);
 
     for(auto p : points){
-        dc.DrawCircle( p, nodeRadius );
+        dc.DrawCircle( p.Location(), nodeRadius );
     }
 }
 
 void GraphTheoryPanel::PanelClickListener(wxMouseEvent & evt){
     wxClientDC dc(this);
-    if(_parent->Mode() == ModeControl::ADD_NODE){
+    if(_parent->Mode() == ModeControl::NONE){
+
+    }else if(_parent->Mode() == ModeControl::ADD_NODE){
         graph->CreateNode(evt.GetLogicalPosition(dc));
         _parent->ResetMode();
     }

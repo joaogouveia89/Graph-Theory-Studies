@@ -21,7 +21,7 @@ public:
 
     void SetDataSetChangedCallback(NewNodeListener callback);
 
-    std::vector<wxPoint> GetNodesPoints();
+    std::vector<Node> GetNodes() const;
 
     int NodeRadius() const { return 10; }
 
