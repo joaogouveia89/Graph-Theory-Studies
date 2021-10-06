@@ -15,7 +15,7 @@ bool Graph::CreateNode(wxPoint nodePoint){
     int condition;
     for(auto n : _nodes){
         condition = pow((nodePoint.x - n.Location().x), 2) + pow((nodePoint.y - n.Location().y), 2);
-        if(condition < pow(nodeRadius, 2)){
+        if(condition < pow(nodeRadius, 2) * 3){
             return false;
         }
     }
