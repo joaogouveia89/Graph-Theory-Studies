@@ -22,38 +22,29 @@ bool GraphApp::OnInit()
 // wxWidgets FRAME
 GraphTheoryPanel::GraphTheoryPanel(GraphTheoryFrame* parent) : wxPanel(parent, wxID_ANY){
     _parent = parent;
-    graph = std::make_unique<Graph>();
+    
+    if(wxGetApp().argc != 2){
+        std::cout << "Please indicate the path of matrix file\n";
+        exit(0);
+    }
+    wxString  graphFilePath(wxGetApp().argv[1]);
+    auto containerSize = parent->GetSize();
+    graph = std::make_unique<Graph>(containerSize.x, containerSize.y);
+
     graph->SetDataSetChangedCallback([&](){
         this->paintNow();
     });
 
+    graph->LoadFromTxtFile(std::string(graphFilePath.mb_str()));
+
     this->Bind(wxEVT_PAINT, &GraphTheoryPanel::paintEvent, this);
-    this->Bind(wxEVT_LEFT_DOWN, &GraphTheoryPanel::PanelClickListener, this);
 }
 
 // wxWidgets FRAME
 GraphTheoryFrame::GraphTheoryFrame(const wxString &title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(width, height))
 {
-    wxInitAllImageHandlers();
-    toolbar = new wxToolBar(this, wxID_ANY);
-    wxBitmap add(wxT("../resources/add.png"), wxBITMAP_TYPE_PNG);
-    wxBitmap remove(wxT("../resources/exit.png"), wxBITMAP_TYPE_PNG);
-    wxBitmap link(wxT("../resources/link.png"), wxBITMAP_TYPE_PNG);
-    toolbar->AddTool(ADD_NODE_EVENT, wxT("Add node"), add);
-    toolbar->AddTool(REMOVE_NODE_EVENT, wxT("Remove node"), remove);
-    toolbar->AddTool(LINK_NODE_EVENT, wxT("Link nodes"), link);
-    toolbar->Realize();
-
-    this->Bind(wxEVT_TOOL, &GraphTheoryFrame::OnHandleToolbarEvent, this, ADD_NODE_EVENT);
-    this->Bind(wxEVT_TOOL, &GraphTheoryFrame::OnHandleToolbarEvent, this, REMOVE_NODE_EVENT);
-    this->Bind(wxEVT_TOOL, &GraphTheoryFrame::OnHandleToolbarEvent, this, LINK_NODE_EVENT);
-
-    wxBoxSizer *vbox = new wxBoxSizer(wxVERTICAL);
-
+    ShowFullScreen(true);
     GraphTheoryPanel* panel = new GraphTheoryPanel(this);
-    vbox->Add(toolbar, 6, wxEXPAND | wxALL, 0);
-    vbox->Add(panel, 1, wxEXPAND | wxALL, 0);
-    SetSizer(vbox);
     this->Centre();
 }
 
@@ -72,35 +63,21 @@ void GraphTheoryPanel::paintNow()
 
 void GraphTheoryPanel::render(wxDC &dc)
 {
-    auto points = graph->GetNodes();
+    auto nodes = graph->GetNodes();
     int nodeRadius = graph->NodeRadius();
     wxColour colour(0, 0, 255);
 
     dc.SetPen(*wxBLUE_PEN);
     dc.SetBrush(*wxBLUE_BRUSH);
+    dc.SetTextForeground(*wxWHITE);
 
-    for(auto p : points){
+    for(auto p : nodes){
         dc.DrawCircle( p.Location(), nodeRadius );
-    }
-}
-
-void GraphTheoryPanel::PanelClickListener(wxMouseEvent & evt){
-    wxClientDC dc(this);
-    if(_parent->Mode() == ModeControl::NONE){
-
-    }else if(_parent->Mode() == ModeControl::ADD_NODE){
-        graph->CreateNode(evt.GetLogicalPosition(dc));
-        _parent->ResetMode();
-    }
-}
-
-void GraphTheoryFrame::OnHandleToolbarEvent(wxCommandEvent& event){
-    int id = event.GetId();
-    switch (id){
-        case ADD_NODE_EVENT:
-            if(currentMode == ModeControl::NONE){
-                currentMode = ModeControl::ADD_NODE;
-            }
-        break;
+        dc.SetPen(*wxWHITE_PEN);
+        wxString labelId = wxString::Format(wxT("%i"),p.Id());
+        wxPoint labelPosition;
+        labelPosition.x = p.Location().x - GetTextExtent(labelId).x/2;
+        labelPosition.y = p.Location().y - GetTextExtent(labelId).y/2;
+        dc.DrawText(labelId, labelPosition);
     }
 }

@@ -77,6 +77,13 @@
         "numbers": "cpp",
         "queue": "cpp",
         "semaphore": "cpp",
-        "stop_token": "cpp"
-    }
+        "stop_token": "cpp",
+        "__tree": "cpp",
+        "codecvt": "cpp",
+        "iomanip": "cpp",
+        "regex": "cpp",
+        "stack": "cpp",
+        "filesystem": "cpp"
+    },
+    "cmake.configureOnOpen": false
 }

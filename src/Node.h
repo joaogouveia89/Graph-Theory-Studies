@@ -3,11 +3,12 @@
 class Node
 {
 private:
+    int _id;
     wxPoint _location;
-    bool _selected { false };
 public:
-    Node(wxPoint location);
+    Node(int id);
     wxPoint Location() const { return _location; }
-    bool IsSelected() const { return _selected; }
+    int Id() const { return _id; }
     ~Node();
+    void SetPosition(int x, int y);
 };

@@ -5,6 +5,9 @@
 #include<memory>
 #include<algorithm>
 #include<math.h>
+#include <fstream>
+#include <regex>
+#include<vector>
 
 #include "Node.h"
 
@@ -14,16 +17,19 @@ class Graph
 {
 private:
     std::vector<Node> _nodes;
+    std::vector<std::vector<int>> _distanceMatrix;
     NewNodeListener callback;
+    int _containerWidth, _containerHeight, _numberOfNodes;
 public:
-    Graph();
+    Graph(int containerWidth, int containerHeight);
     ~Graph();
 
     void SetDataSetChangedCallback(NewNodeListener callback);
 
     std::vector<Node> GetNodes() const;
 
-    int NodeRadius() const { return 10; }
+    void LoadFromTxtFile(const std::string filePath);
 
-    bool CreateNode(wxPoint nodePoint);
+
+    int NodeRadius() const { return 20; }
 };
