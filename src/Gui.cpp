@@ -43,7 +43,6 @@ GraphTheoryPanel::GraphTheoryPanel(GraphTheoryFrame* parent) : wxPanel(parent, w
 // wxWidgets FRAME
 GraphTheoryFrame::GraphTheoryFrame(const wxString &title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(width, height))
 {
-    ShowFullScreen(true);
     GraphTheoryPanel* panel = new GraphTheoryPanel(this);
     this->Centre();
 }
@@ -72,12 +71,12 @@ void GraphTheoryPanel::render(wxDC &dc)
     dc.SetTextForeground(*wxWHITE);
 
     for(auto p : nodes){
-        dc.DrawCircle( p.Location(), nodeRadius );
+        dc.DrawCircle( p->Location(), nodeRadius );
         dc.SetPen(*wxWHITE_PEN);
-        wxString labelId = wxString::Format(wxT("%i"),p.Id());
+        wxString labelId = wxString::Format(wxT("%i"),p->Id());
         wxPoint labelPosition;
-        labelPosition.x = p.Location().x - GetTextExtent(labelId).x/2;
-        labelPosition.y = p.Location().y - GetTextExtent(labelId).y/2;
+        labelPosition.x = p->Location().x - GetTextExtent(labelId).x/2;
+        labelPosition.y = p->Location().y - GetTextExtent(labelId).y/2;
         dc.DrawText(labelId, labelPosition);
     }
 }

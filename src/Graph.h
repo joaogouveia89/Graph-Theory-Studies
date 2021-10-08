@@ -16,7 +16,7 @@ typedef std::function<void ()> NewNodeListener;
 class Graph
 {
 private:
-    std::vector<Node> _nodes;
+    std::vector<std::shared_ptr<Node>> _nodes;
     std::vector<std::vector<int>> _distanceMatrix;
     NewNodeListener callback;
     int _containerWidth, _containerHeight, _numberOfNodes;
@@ -26,7 +26,7 @@ public:
 
     void SetDataSetChangedCallback(NewNodeListener callback);
 
-    std::vector<Node> GetNodes() const;
+    std::vector<std::shared_ptr<Node>> GetNodes() const;
 
     void LoadFromTxtFile(const std::string filePath);
 

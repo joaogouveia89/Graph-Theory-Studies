@@ -48,9 +48,9 @@ void Graph::LoadFromTxtFile(const std::string filePath){
         std::cout << "Loaded graph with " << _numberOfNodes << " nodes and the central node is " << centralNodeId << "\n";
         std::cout << "Assigning node positions...\n";
         //Creating the central node
-        Node n(centralNodeId);
+        std::shared_ptr<Node> n = std::make_shared<Node>(centralNodeId);
         std::cout << "_containerWidth = " << _containerWidth << " _containerHeight = " << _containerHeight << std::endl;
-        n.SetPosition(_containerWidth/2, _containerHeight/2);
+        n->SetPosition(_containerWidth/2, _containerHeight/2);
        _nodes.emplace_back(std::move(n));
        int currentAngle = 0;
        auto _centralNodeLinks = _distanceMatrix.at(centralNodeId);
@@ -58,21 +58,26 @@ void Graph::LoadFromTxtFile(const std::string filePath){
        // Create nodes that are connected to centralNode increasing the angle of the position regarding it
         for(int node = 0; node < _numberOfNodes; node++){
             if(node != centralNodeId && _centralNodeLinks.at(node) != -1){
-                Node n(node);
+                std::shared_ptr<Node> nodePtr = std::make_shared<Node>(node);
                 //TODO implement a way of user insert the wish scale, in this case is 50 in below lines
-                n.SetPosition(
-                    _nodes.front().Location().x + _centralNodeLinks.at(node) * 50 * cos(currentAngle),
-                    _nodes.front().Location().y + _centralNodeLinks.at(node) * 50 * sin(currentAngle)
+                nodePtr->SetPosition(
+                    _nodes.front()->Location().x + _centralNodeLinks.at(node) * 50 * cos(currentAngle),
+                    _nodes.front()->Location().y + _centralNodeLinks.at(node) * 50 * sin(currentAngle)
                 );
                 currentAngle += angleGrowRatio;
-                _nodes.emplace_back(std::move(n));
+                _nodes.emplace_back(std::move(nodePtr));
             }
         }
         callback();
     }
 }
 
-std::vector<Node> Graph::GetNodes() const{
+std::vector<std::shared_ptr<Node>> Graph::GetNodes() const{
+    std::vector<std::shared_ptr<Node>> toReturn;
+
+    for(auto nptr : _nodes){
+        toReturn.emplace_back(nptr);
+    }
     //Similar to map std::transform(_nodes.begin(), _nodes.end(), back_inserter(points), [](Node node) { return node.Location(); });
-    return _nodes;
+    return toReturn;
 }
