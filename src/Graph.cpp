@@ -59,6 +59,7 @@ void Graph::LoadFromTxtFile(const std::string filePath){
         for(int node = 0; node < _numberOfNodes; node++){
             if(node != centralNodeId && _centralNodeLinks.at(node) != -1){
                 Node n(node);
+                //TODO implement a way of user insert the wish scale, in this case is 50 in below lines
                 n.SetPosition(
                     _nodes.front().Location().x + _centralNodeLinks.at(node) * 50 * cos(currentAngle),
                     _nodes.front().Location().y + _centralNodeLinks.at(node) * 50 * sin(currentAngle)
